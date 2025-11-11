@@ -1,0 +1,58 @@
+import fs from "fs";
+import path from "path";
+import yaml from "js-yaml";
+
+interface PromptTemplate {
+  system: string;
+  user: string;
+}
+
+interface Prompts {
+  _common: {
+    base_system: string;
+  };
+  create_logline: PromptTemplate;
+  create_from_logline_w_gulino: PromptTemplate;
+  create_from_logline_w_vogel: PromptTemplate;
+  create_from_logline_w_snider: PromptTemplate;
+  extract_plot_point: PromptTemplate;
+}
+
+let prompts: Prompts | null = null;
+
+export function loadPrompts(): Prompts {
+  if (prompts) return prompts;
+
+  const promptsPath = path.join(process.cwd(), "lib", "prompts.yaml");
+  const fileContents = fs.readFileSync(promptsPath, "utf8");
+  prompts = yaml.load(fileContents) as Prompts;
+
+  return prompts;
+}
+
+export function getPrompt(
+  promptName: keyof Omit<Prompts, "_common">
+): PromptTemplate {
+  const allPrompts = loadPrompts();
+  return allPrompts[promptName];
+}
+
+export function formatPrompt(
+  promptName: keyof Omit<Prompts, "_common">,
+  variables: Record<string, string>
+): { system: string; user: string } {
+  const prompt = getPrompt(promptName);
+
+  let formattedUser = prompt.user;
+  for (const [key, value] of Object.entries(variables)) {
+    formattedUser = formattedUser.replace(
+      new RegExp(`\\{${key}\\}`, "g"),
+      value
+    );
+  }
+
+  return {
+    system: prompt.system,
+    user: formattedUser,
+  };
+}

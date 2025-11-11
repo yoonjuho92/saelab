@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-[Yui] text-3xl lg:text-5xl px-10 antialiased min-h-screen bg-[url('/bg.png')] bg-cover">
+      <body className="font-[Yui] break-keep leading-relaxed text-2xl lg:text-4xl px-10 lg:px-24 antialiased min-h-screen bg-[url('/bg.png')] bg-cover">
         {children}
       </body>
     </html>

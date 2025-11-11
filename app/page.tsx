@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SketchCard from "@/components/SketchCard";
 import ClickableText from "@/components/ClickableText";
 import Image from "next/image";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const router = useRouter();
+
+  const handlePageChange = (newPage: number) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentPage(newPage);
+      setIsTransitioning(false);
+    }, 300); // Match the CSS transition duration
+  };
 
   const page1 = (
     <div className="flex flex-col">
@@ -22,7 +33,7 @@ export default function Home() {
         해요!
       </p>
       <div className="flex mt-6 justify-center">
-        <ClickableText onClick={() => setCurrentPage(2)}>
+        <ClickableText onClick={() => handlePageChange(2)}>
           [ 시작하기 ]
         </ClickableText>
       </div>
@@ -33,7 +44,9 @@ export default function Home() {
     <div>
       <p>당신은...</p>
       <div className="flex flex-col gap-4 mt-4">
-        <SketchCard className="py-2 w-fit">오늘 처음 왔어요!</SketchCard>
+        <SketchCard className="py-2 w-fit" onClick={() => router.push("/day1")}>
+          오늘 처음 왔어요!
+        </SketchCard>
         <SketchCard className="py-2">
           저번에 시작했던 걸 이어서 하고 싶어요!
         </SketchCard>
@@ -43,11 +56,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex-col flex items-center justify-center relative">
-      {currentPage === 1 ? page1 : page2}
+      <div
+        className={`transition-opacity duration-300 ${
+          isTransitioning ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        {currentPage === 1 ? page1 : page2}
+      </div>
 
       {currentPage > 1 && (
         <div className="fixed bottom-8 right-8">
-          <ClickableText onClick={() => setCurrentPage(currentPage - 1)}>
+          <ClickableText onClick={() => handlePageChange(currentPage - 1)}>
             ← 뒤로
           </ClickableText>
         </div>
