@@ -47,7 +47,7 @@ function StoryCard({ story }: StoryCardProps) {
                     <p className="font-bold text-xl lg:text-2xl text-neutral-300 dark:text-neutral-500 mb-2">
                       {beat.이름}
                     </p>
-                    <p className="text-lg lg:text-2xl leading-relaxed">
+                    <p className="text-xl lg:text-3xl leading-relaxed">
                       {beat.내용}
                     </p>
                   </div>
