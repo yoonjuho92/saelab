@@ -7,5 +7,9 @@ export default function Day1Layout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Day1Provider>{children}</Day1Provider>;
+  return (
+    <Day1Provider>
+      <div className="h-full overflow-y-auto w-full">{children}</div>
+    </Day1Provider>
+  );
 }

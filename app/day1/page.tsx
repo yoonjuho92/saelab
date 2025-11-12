@@ -25,10 +25,10 @@ function StoryCard({ story }: StoryCardProps) {
   const description = frameworkDescriptions[story.metadata.framework] || "";
 
   return (
-    <div className="h-full overflow-y-auto px-1 lg:px-2">
-      <div className="p-4 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
+    <div className="h-full overflow-y-auto">
+      <div className="p-3 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-xl lg:rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
         {description && (
-          <p className="text-xs lg:text-base text-neutral-600 dark:text-neutral-400 mb-4 lg:mb-6 text-center italic">
+          <p className="text-xl lg:text-3xl text-neutral-600 dark:text-neutral-400 mb-4 lg:mb-6 text-center italic">
             {description}
           </p>
         )}
@@ -355,7 +355,7 @@ export default function Day() {
       </div>
 
       {/* Selected Framework Content with Fixed Height */}
-      <div className="max-h-[65vh] lg:max-h-[60vh] overflow-hidden flex-1">
+      <div className="overflow-x-auto pb-16">
         {selectedFramework === "gulino" && stories.gulino && (
           <StoryCard story={stories.gulino} />
         )}
@@ -372,9 +372,9 @@ export default function Day() {
   const pages = [page1, page2, page3, page4, page5];
 
   return (
-    <div className="min-h-screen flex-col flex items-center justify-center relative">
+    <div className="flex-col flex items-center h-screen justify-center">
       <div
-        className={`transition-opacity duration-300 ${
+        className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
         }`}
       >
