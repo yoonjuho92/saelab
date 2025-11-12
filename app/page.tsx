@@ -47,7 +47,7 @@ export default function Home() {
         <SketchCard className="py-2 w-fit" onClick={() => router.push("/day1")}>
           오늘 처음 왔어요!
         </SketchCard>
-        <SketchCard className="py-2">
+        <SketchCard className="py-2 w-fit" onClick={() => router.push("/login")}>
           저번에 시작했던 걸 이어서 하고 싶어요!
         </SketchCard>
       </div>

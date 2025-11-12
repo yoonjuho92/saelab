@@ -23,7 +23,7 @@ export default function RootLayout({
       <body
         className={
           yui.className +
-          " break-keep leading-relaxed text-2xl lg:text-4xl px-10 lg:px-24 antialiased min-h-screen bg-[url('/bg.png')] bg-cover"
+          " max-h-screen break-keep leading-relaxed text-2xl lg:text-4xl px-4 lg:px-24 antialiased min-h-screen bg-[url('/bg.png')] bg-cover overflow-x-hidden"
         }
       >
         {children}

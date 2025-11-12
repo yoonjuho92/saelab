@@ -25,29 +25,29 @@ function StoryCard({ story }: StoryCardProps) {
   const description = frameworkDescriptions[story.metadata.framework] || "";
 
   return (
-    <div className="h-full overflow-y-auto px-2">
-      <div className="p-6 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
+    <div className="h-full overflow-y-auto px-1 lg:px-2">
+      <div className="p-4 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
         {description && (
-          <p className=" text-neutral-600 dark:text-neutral-400 mb-6 text-center italic">
+          <p className="text-xs lg:text-base text-neutral-600 dark:text-neutral-400 mb-4 lg:mb-6 text-center italic">
             {description}
           </p>
         )}
-        <div className="space-y-8">
+        <div className="space-y-6 lg:space-y-8">
           {Object.entries(story.막).map(([actName, beats]) => (
             <div key={actName}>
-              <h4 className="text-xl lg:text-2xl font-bold mb-4 uppercase tracking-wider">
+              <h4 className="text-sm lg:text-2xl font-bold mb-3 lg:mb-4 uppercase tracking-wider">
                 {actName}
               </h4>
-              <div className="space-y-4 pl-2">
+              <div className="space-y-3 lg:space-y-4 pl-1 lg:pl-2">
                 {beats.map((beat, idx) => (
                   <div
                     key={idx}
-                    className="border-l-4 border-neutral-800 dark:border-neutral-300 pl-4"
+                    className="border-l-2 lg:border-l-4 border-neutral-800 dark:border-neutral-300 pl-2 lg:pl-4"
                   >
-                    <p className="font-bold text-xl lg:text-2xl text-neutral-300 dark:text-neutral-500 mb-2">
+                    <p className="font-bold text-base lg:text-2xl text-neutral-400 dark:text-neutral-500 mb-1 lg:mb-2">
                       {beat.이름}
                     </p>
-                    <p className="text-xl lg:text-3xl leading-relaxed">
+                    <p className="text-sm lg:text-2xl leading-relaxed">
                       {beat.내용}
                     </p>
                   </div>
@@ -250,7 +250,7 @@ export default function Day() {
           />
         </div>
 
-        <div className="border-b-2 flex items-center flex-row border-neutral-300 dark:border-neutral-700 pb-6">
+        <div className="border-b-2 flex items-center flex-col lg:flex-row border-neutral-300 dark:border-neutral-700 pb-6">
           <p className="text-center mr-2">
             로그라인이 생각나지 않으면 AI의 도움을 받아
           </p>
@@ -296,32 +296,32 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center px-4 max-w-6xl h-screen flex flex-col">
-      <p className="text-center text-2xl lg:text-4xl">
+    <div className="w-full max-w-6xl justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
+      <p className="text-center text-base lg:text-4xl mb-4">
         세 가지 <span className="font-bold">구조</span>로 만들어진 이야기들을
         살펴보세요!
       </p>
 
       {/* 로그라인 */}
-      <div className="mb-6 pb-4 border-b-2 border-neutral-300 dark:border-neutral-700">
-        <p className="text-sm lg:text-base font-medium text-neutral-500 dark:text-neutral-500 uppercase tracking-wider mb-2">
+      <div className="mb-4 pb-3 border-b-2 border-neutral-300 dark:border-neutral-700">
+        <p className="text-xs lg:text-base font-medium text-neutral-500 dark:text-neutral-500 uppercase tracking-wider mb-1">
           로그라인
         </p>
         <div className="overflow-x-auto">
-          <p className="text-base lg:text-2xl leading-relaxed text-center whitespace-nowrap">
+          <p className="text-sm lg:text-2xl leading-relaxed text-center whitespace-nowrap">
             {logline}
           </p>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex justify-center gap-8 mb-6">
+      <div className="flex justify-center gap-4 lg:gap-8 mb-4 flex-wrap">
         {stories.gulino && (
           <button
             onClick={() => setSelectedFramework("gulino")}
-            className={`text-xl lg:text-3xl pb-2 transition-all ${
+            className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "gulino"
-                ? "border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >
@@ -331,9 +331,9 @@ export default function Day() {
         {stories.vogel && (
           <button
             onClick={() => setSelectedFramework("vogel")}
-            className={`text-xl lg:text-3xl pb-2 transition-all ${
+            className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "vogel"
-                ? "border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >
@@ -343,9 +343,9 @@ export default function Day() {
         {stories.snider && (
           <button
             onClick={() => setSelectedFramework("snider")}
-            className={`text-xl lg:text-3xl pb-2 transition-all ${
+            className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "snider"
-                ? "border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >
@@ -355,7 +355,7 @@ export default function Day() {
       </div>
 
       {/* Selected Framework Content with Fixed Height */}
-      <div className="max-h-[60vh] overflow-hidden">
+      <div className="max-h-[65vh] lg:max-h-[60vh] overflow-hidden flex-1">
         {selectedFramework === "gulino" && stories.gulino && (
           <StoryCard story={stories.gulino} />
         )}
