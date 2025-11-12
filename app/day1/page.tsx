@@ -92,9 +92,9 @@ export default function Day() {
   };
 
   const page1 = (
-    <div>
+    <div className="flex items-center flex-col">
       <p>만나서 반가워요!</p>
-      <div className="flex mt-6 justify-center">
+      <div className="mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(2)}>
           [다음]
         </ClickableText>
@@ -296,7 +296,7 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full max-w-6xl justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
+    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
       <p className="text-center text-base lg:text-4xl mb-4">
         세 가지 <span className="font-bold">구조</span>로 만들어진 이야기들을
         살펴보세요!
@@ -369,7 +369,29 @@ export default function Day() {
     </div>
   );
 
-  const pages = [page1, page2, page3, page4, page5];
+  const page6 = (
+    <div className="flex items-center flex-col">
+      <div>
+        <p>
+          당신의 로그라인으로 만든 세 가지 이야기를 보면서 어떤 생각이 드셨나요?
+          원하신다면 로그라인 페이지로 돌아가 로그라인을 바꿔보고, 새로운
+          이야기를 만들어 보세요!
+        </p>
+        <br />
+        <p>
+          충분히 실험해 보았다면, 이제 <span className="font-bold">구조</span>에
+          대해 이야기해 볼까요?
+        </p>
+      </div>
+      <div className="mt-6 items-cener justify-center">
+        <ClickableText onClick={() => handlePageChange(7)}>
+          [다음]
+        </ClickableText>
+      </div>
+    </div>
+  );
+
+  const pages = [page1, page2, page3, page4, page5, page6];
 
   return (
     <div className="flex-col flex items-center h-screen justify-center">
