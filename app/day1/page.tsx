@@ -288,8 +288,13 @@ export default function Day() {
 
   const page4 = (
     <div className="w-full px-4">
-      <p className="mb-6 text-center">
-        이야기의 핵심을 한 문장으로 표현하는 로그라인을 만들어봅시다!
+      <p className="text-center">
+        지금 생각나는 이야기의 씨앗, 로그라인을 입력해 주세요.
+      </p>
+      <p className="text-xl lg:text-2xl text-center">
+        지금 입력하는 로그라인은 구조를 배우기 위한 연습용이고, 진짜 나만의
+        이야기를 만드는 데 쓸 로그라인은 다음 시간에 쓸 거예요! 그러니 부담 갖지
+        말고 아무 로그라인이나 입력해 주세요. 힘들면 AI를 활용해도 좋습니다!
       </p>
 
       <div className="space-y-6 w-full">
@@ -349,10 +354,10 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col pt-3 py-4">
-      <div className="text-center text-base lg:text-4xl mb-4 flex items-center justify-center gap-1">
-        세 가지 <span className="font-bold">구조</span>로 만들어진 이야기들을
-        살펴보세요!
+    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col pt-3 py-4 pt-8">
+      <div className="text-center text-base lg:text-4xl mb-4 flexitems-center justify-center gap-1">
+        입력한 이야기의 씨앗으로 AI가 만든 세 가지{" "}
+        <span className="font-bold">구조</span>의 이야기를 살펴볼까요?
         <Image
           src="/구조(열쇠).png"
           alt="열쇠"
