@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import ClickableText from "@/components/ClickableText";
 import SketchInput from "@/components/SketchInput";
@@ -72,6 +73,12 @@ export default function Day() {
   const [selectedFramework, setSelectedFramework] = useState<
     "gulino" | "vogel" | "snider"
   >("gulino");
+  const [extractedStructure, setExtractedStructure] = useState<{
+    처음: string;
+    중간: string;
+    끝: string;
+  } | null>(null);
+  const [isExtractingStructure, setIsExtractingStructure] = useState(false);
 
   const genreOptions = [
     "SF",
@@ -93,7 +100,9 @@ export default function Day() {
 
   const page1 = (
     <div className="flex items-center flex-col">
+      <Image alt="신난 룩말" src="/짱룩말.gif" width={200} height={200} />
       <p>만나서 반가워요!</p>
+
       <div className="mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(2)}>
           [다음]
@@ -118,6 +127,7 @@ export default function Day() {
 
   const page3 = (
     <div>
+      <Image src="/구조(열쇠).png" alt="열쇠" width={25} height={25} />
       <p>
         그래서 오늘, 자신만의 이야기를 만드는 5일 여정의 첫날에는 길고, 크고,
         복잡한 이야기를 만드는 과정을 쉽고 재밌게 만들어 줄 도구인{" "}
@@ -164,6 +174,50 @@ export default function Day() {
       alert("로그라인 생성에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleExtractStructure = async () => {
+    if (!stories.gulino) {
+      alert("먼저 이야기를 생성해주세요!");
+      return;
+    }
+
+    setIsExtractingStructure(true);
+    try {
+      // Gulino story를 문자열로 변환
+      const storyText = Object.entries(stories.gulino.막)
+        .map(([actName, beats]) => {
+          return `${actName}:\n${beats
+            .map((b) => `${b.이름}: ${b.내용}`)
+            .join("\n")}`;
+        })
+        .join("\n\n");
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          promptName: "extract_structure",
+          variables: { story: storyText },
+          responseFormat: "json",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to extract structure");
+      }
+
+      const data = await response.json();
+      setExtractedStructure(data.result);
+      handlePageChange(9);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("구조 추출에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsExtractingStructure(false);
     }
   };
 
@@ -238,19 +292,18 @@ export default function Day() {
         이야기의 핵심을 한 문장으로 표현하는 로그라인을 만들어봅시다!
       </p>
 
-      <div className="space-y-6">
+      <div className="space-y-6 w-full">
         <div>
           <label className="block text-xl mb-2">로그라인</label>
           <SketchInput
             value={logline}
             onChange={setLogline}
             placeholder="예: 한 젊은 농부가 은하계를 구하기 위해 제다이가 되는 여정을 떠난다."
-            rows={4}
             seed={42}
           />
         </div>
 
-        <div className="border-b-2 flex items-center flex-col lg:flex-row border-neutral-300 dark:border-neutral-700 pb-6">
+        <div className="border-b-2 flex justify-center items-center flex-col lg:flex-row border-neutral-300 dark:border-neutral-700 pb-6">
           <p className="text-center mr-2">
             로그라인이 생각나지 않으면 AI의 도움을 받아
           </p>
@@ -296,11 +349,18 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
-      <p className="text-center text-base lg:text-4xl mb-4">
+    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col pt-3 py-4">
+      <div className="text-center text-base lg:text-4xl mb-4 flex items-center justify-center gap-1">
         세 가지 <span className="font-bold">구조</span>로 만들어진 이야기들을
         살펴보세요!
-      </p>
+        <Image
+          src="/구조(열쇠).png"
+          alt="열쇠"
+          width={16}
+          height={16}
+          className="inline ml-2 w-4 h-4 lg:w-6 lg:h-6"
+        />
+      </div>
 
       {/* 로그라인 */}
       <div className="mb-4 pb-3 border-b-2 border-neutral-300 dark:border-neutral-700">
@@ -391,10 +451,139 @@ export default function Day() {
     </div>
   );
 
-  const pages = [page1, page2, page3, page4, page5, page6];
+  const page7 = (
+    <div className="flex items-center flex-col">
+      <div>
+        <p>
+          2,500년 전, 이야기에 대한 가장 오래되고 가장 유명한 책인
+          &lt;시학&gt;에서 아리스토텔레스는 이렇게 말했어요.
+        </p>
+        <p className="text-center">
+          &quot;이야기에는 <span className="font-bold">시작, 중간, 끝</span>이
+          있다.&quot;
+        </p>
+      </div>
+      <div className="mt-6 items-cener justify-center">
+        <ClickableText onClick={() => handlePageChange(8)}>
+          [당연한 소리처럼 보일 수 있겠지만...]
+        </ClickableText>
+      </div>
+    </div>
+  );
+
+  const page8 = (
+    <div className="flex items-center flex-col">
+      <div>
+        <Image src="/책.png" alt="책" width={50} height={50} />
+        <p>
+          당연해 보일 수 있겠지만 이 말은 이야기의 구조에 대한, 2500년이 지난
+          지금까지도 변하지 않는 어떤 원칙을 담고 있어요.
+        </p>
+        <p>
+          그 원칙은, 좋은 이야기, 완전한 이야기란 어떤 욕망을 가진 주인공이
+          사건을 마주하고<span className="font-bold">(=처음)</span>, 그 사건과
+          대결하면서 성장하고<span className="font-bold">(=중간)</span>, 최종
+          대결 끝에 처음과는 다른 사람이 되어 집으로 돌아온다
+          <span className="font-bold">(=끝)</span>는 원칙이에요.
+        </p>
+      </div>
+      <div className="mt-6 items-cener justify-center">
+        <ClickableText onClick={handleExtractStructure}>
+          {isExtractingStructure
+            ? "[분석 중...]"
+            : "[이 구조를 우리가 만든 이야기에 적용해 볼까요?]"}
+        </ClickableText>
+      </div>
+    </div>
+  );
+
+  const page9 = (
+    <div className="flex items-center flex-col w-full px-4 h-screen overflow-y-auto py-8 pb-24">
+      {extractedStructure ? (
+        <div className="w-full max-w-4xl">
+          <p className="text-center mb-8">
+            우리가 만든 줄리노 구조의 이야기를 3막 구조로 분석하면 이렇게
+            됩니다:
+          </p>
+
+          <div className="space-y-6">
+            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                처음 (Beginning)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.처음}
+              </p>
+            </div>
+
+            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                중간 (Middle)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.중간}
+              </p>
+            </div>
+
+            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                끝 (End)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.끝}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p>이렇게 모든 이야기는 시작, 중간, 끝의 구조를 가지고 있습니다!</p>
+          </div>
+
+          <div className="flex justify-center">
+            <ClickableText onClick={() => handlePageChange(10)}>
+              [다음]
+            </ClickableText>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p className="text-center">구조를 분석하는 중입니다...</p>
+        </div>
+      )}
+    </div>
+  );
+
+  const page10 = (
+    <div className="flex items-center flex-col">
+      <div>
+        <p>
+          <Image src="/슬레이트.png" alt="슬레이트" width={50} height={50} />
+          <span className="font-bold">구조</span>는 이야기를 만드는 걸 도와주는
+          도구입니다. 오늘은 간단한 로그라인으로 AI의 도움을 받아 이야기를
+          만들고, 그 과정에 구조란 어떤 건지를 배워 봤습니다. 어떠셨나요? 다음
+          시간부터는 본격적으로 나만의 이야기를 만들어 보려고 합니다. (당연히
+          오늘 배운 구조를 활용해서!) 간단하게 어떤 이야기를 만들고 싶은지
+          생각해 오면 좋을 것 같아요!
+        </p>
+      </div>
+    </div>
+  );
+
+  const pages = [
+    page1,
+    page2,
+    page3,
+    page4,
+    page5,
+    page6,
+    page7,
+    page8,
+    page9,
+    page10,
+  ];
 
   return (
-    <div className="flex-col flex items-center h-screen justify-center">
+    <div className="flex-col flex items-center h-screen justify-center px-4">
       <div
         className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
@@ -404,7 +593,7 @@ export default function Day() {
       </div>
 
       {currentPage > 1 && (
-        <div className="fixed bottom-8 left-8">
+        <div className="fixed bottom-4 left-4 lg:bottom-8 lg:left-8">
           <ClickableText onClick={() => handlePageChange(currentPage - 1)}>
             ← 뒤로
           </ClickableText>
@@ -412,13 +601,13 @@ export default function Day() {
       )}
 
       {currentPage === 1 && (
-        <div className="fixed bottom-8 left-8">
+        <div className="fixed bottom-4 left-4 lg:bottom-8 lg:left-8">
           <ClickableText onClick={() => router.push("/")}>← 뒤로</ClickableText>
         </div>
       )}
 
       {currentPage < pages.length && (
-        <div className="fixed bottom-8 right-8">
+        <div className="fixed bottom-4 right-4 lg:bottom-8 lg:right-8">
           <ClickableText onClick={() => handlePageChange(currentPage + 1)}>
             다음 →
           </ClickableText>

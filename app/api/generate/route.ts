@@ -6,7 +6,8 @@ type PromptName =
   | "create_from_logline_w_gulino"
   | "create_from_logline_w_vogel"
   | "create_from_logline_w_snider"
-  | "extract_plot_point";
+  | "extract_plot_point"
+  | "extract_structure";
 
 export async function POST(request: NextRequest) {
   try {

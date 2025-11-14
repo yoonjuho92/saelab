@@ -1,101 +1,68 @@
 # Copilot Instructions for saelab
 
-## Project Overview
+## Big Picture
 
-This is a Next.js 16 + React 19 interactive storytelling application with a hand-drawn sketch aesthetic. The project uses Korean language UI and features a character named "룩말 (Lookmal)" who guides users through story creation.
+- Interactive storytelling app (Korean UI) using Next.js 16 App Router + React 19 + Tailwind 4. Sketch/hand-drawn look via RoughJS. Guide character: “룩말”.
+- Client-heavy: most components/pages use hooks — add "use client" for interactivity.
 
-## Tech Stack & Key Dependencies
+## Architecture & Flow
 
-- **Next.js 16** with App Router (not Pages Router)
-- **React 19.2** with TypeScript
-- **Tailwind CSS 4.x** (PostCSS-based, no `tailwind.config.js`)
-- **RoughJS** for hand-drawn sketch rendering (used in `SketchCard.tsx`)
+- Routes: `app/page.tsx` (2-step home with internal state), `app/day1/*` (guided flow with context + persistence), `app/login/page.tsx` (placeholder).
+- Global shell: `app/layout.tsx` loads local font via `next/font/local` and sets background image. Page transitions wrap with `app/template.tsx` (`animate-fadeIn` from `app/globals.css`).
+- Day 1 flow state: `app/day1/context.tsx` provides `Day1Provider` storing `logline`, generated `stories`, and `plotPoints` in `localStorage` with keys `day1_*`. Context hydrates on mount and persists changes automatically.
+- Data flow: Client calls `POST /api/generate` → `app/api/generate/route.ts` formats prompts from `lib/prompts.yaml` (via `lib/promptLoader.ts`) → calls OpenAI Chat Completions and returns text or parsed JSON.
 
-## Architecture Patterns
+## Context Pattern & State Management
 
-### Component Strategy
+- Day 1 wraps content in `Day1Provider` via `app/day1/layout.tsx` — ensures context available to all child routes.
+- Context uses `isLoaded` flag to prevent hydration mismatch: renders `null` until `localStorage` is read on client.
+- All state setters (e.g., `setLogline`) automatically persist to `localStorage`; no manual save calls needed.
+- TypeScript types: `StoryStructure` defines JSON shape from API; `Stories` holds all three frameworks (`gulino`, `vogel`, `snider`).
 
-All interactive components require `"use client"` directive at the top since this is a client-heavy interactive app.
+## UI Components (RoughJS)
 
-**SketchCard Component** (`components/SketchCard.tsx`):
+- `SketchCard`, `SketchButton`, `SketchInput`, `SketchSelect`: draw sketch borders in an absolutely-positioned SVG overlay; content sits in a `z-10` wrapper. All use `ResizeObserver` + `requestAnimationFrame` redraw.
+- Determinism: pass `seed` to keep lines stable across rerenders (e.g., `seed={42}`). Omitting seed generates new random lines each render.
+- Inputs: `SketchInput` supports `multiline={true}` + `rows={5}`; `SketchSelect` takes `options={["a","b"]}` array and shows a placeholder option.
+- Text: `ClickableText` is a `<button>` with hover opacity change and `cursor: "default"` to match the design (not pointer).
+- All sketch components have same props: `stroke`, `strokeWidth`, `roughness`, `bowing`, `fill`, `fillStyle`, `seed`, `radius`, `inset`. Defaults work for most cases.
 
-- Custom canvas-based component using RoughJS for hand-drawn borders
-- Uses ResizeObserver with requestAnimationFrame for performant redraws
-- Provides extensive customization props: `roughness`, `bowing`, `seed`, `radius`, etc.
-- SVG overlay is absolutely positioned with `pointer-events-none`
-- Content is wrapped in relative z-10 div for proper layering
+## Navigation & Transitions
 
-**ClickableText Component** (`components/ClickableText.tsx`):
+- Internal "pages": components use `useState` + `isTransitioning` to fade out/in with a 300ms timeout (see `app/page.tsx`, `app/day1/page.tsx`).
+- Pattern: `setIsTransitioning(true)` → `setTimeout(() => { setCurrentPage(n); setIsTransitioning(false); }, 300)`.
+- Route nav: use `useRouter().push("/day1")` from clickable cards/text. Back/next affordances are fixed at corners with `fixed bottom-8 right-8`.
+- Template wrapper (`app/template.tsx`) provides route-level fade-in; don't duplicate `animate-fadeIn` on internal transitions.
 
-- Hover opacity changes to 0.7 for feedback
-- Uses button semantic element with `cursor: default` to match design
-- Inherits font family from parent (Yui font)
+## AI/Prompt Integration
 
-### Navigation Pattern
+- Prompts: YAML at `lib/prompts.yaml` with templates for `create_logline`, `create_from_logline_w_{gulino|vogel|snider}`, `extract_plot_point` (and `extract_structure` available). `formatPrompt()` substitutes `{variables}` placeholders.
+- API: `app/api/generate/route.ts` uses `OPENAI_API_KEY` env var and model `gpt-4.1-mini`. Set `responseFormat: "json"` to enforce JSON mode and parse `message.content`.
+- Client usage example: `app/day1/page.tsx` calls the API in parallel (`Promise.all`) to produce three frameworks, each returning `{ metadata, 막: { '1막'|'2막'|'3막': [{이름,내용}] } }` JSON.
+- Error handling: JSON parse failures return 500 with clear message; text mode returns `{ result: content }` directly.
+- Always await response, check `response.ok`, and handle errors with user-facing alerts.
 
-The app uses a hybrid navigation approach:
+## Styling & Conventions
 
-- **Home page** (`app/page.tsx`) uses `useState` for internal multi-page flows (page1, page2, etc.)
-- **Feature routes** use Next.js App Router (e.g., `/page1` for new user flow)
-- SketchCard components with `onClick` can trigger `useRouter().push()` for route navigation
-- Back button is positioned fixed bottom-right using `router.push()` or state updates
+- Tailwind 4 via PostCSS (no `tailwind.config.js`); classes only. Base type ramps around `text-2xl lg:text-4xl` with hover/active scale micro-interactions.
+- Yui font (NanumGimYuICe) installed both in CSS (`@font-face`) and via `next/font/local`; UI inherits font (`fontFamily: "inherit"`).
+- Background image set globally (`bg-[url('/bg.png')] bg-cover`); cards use semi-transparent layers (`bg-white/80 dark:bg-neutral-900/70`).
+- Images: always provide `width`/`height` to `next/image`. Horizontal flip: `className="transform scale-x-[-1]"` (see `glint.png`).
+- Use path alias `@/*` (maps to project root in `tsconfig.json`).
+- Responsive: mobile-first with `lg:` breakpoint for desktop refinements.
 
-### Page Transitions
+## Developer Workflow
 
-Smooth transitions are implemented at two levels:
+- Commands: `npm run dev` (port 3000), `npm run build`, `npm start`, `npm run lint`.
+- Env: set `OPENAI_API_KEY` in `.env.local` for `/api/generate` to work locally/deployed.
+- Files to study first: `app/page.tsx`, `app/day1/page.tsx`, `app/day1/context.tsx`, `components/*`, `app/api/generate/route.ts`, `lib/{promptLoader.ts,prompts.yaml}`.
+- TypeScript: strict mode enabled; always type props interfaces. React 19 JSX transform (`"jsx": "react-jsx"`).
 
-- **Internal state transitions** (within `page.tsx`): Use `isTransitioning` state with `opacity` transitions (300ms) and `setTimeout` to fade out → update state → fade in
-- **Route transitions** (`app/template.tsx`): Wraps all pages with `animate-fadeIn` class for 0.5s fade-in animation when navigating between routes
-- Custom `@keyframes fadeIn` animation defined in `globals.css`
+## Do/Don’t (Project‑specific)
 
-## Styling Conventions
-
-### Korean Font Setup
-
-Custom font "Yui" (NanumGimYuICe.ttf) loaded via `@font-face` in `globals.css`. Applied globally as `font-[Yui]` in `layout.tsx`.
-
-### Responsive Design
-
-- Base text: `text-3xl lg:text-5xl`
-- Use `lg:` breakpoint for desktop sizing adjustments
-- Interactive elements scale on hover: `hover:scale-[1.02]` and active: `active:scale-[0.98]`
-
-### Background & Theme
-
-Body has background image (`bg-[url('/bg.png')]`) with semi-transparent overlays on cards (`bg-white/80 dark:bg-neutral-900/70`). Dark mode support via Tailwind's dark: prefix.
-
-## File Organization
-
-- `/app` - Next.js App Router pages and layouts
-- `/components` - Reusable React components (use PascalCase)
-- `/public/day1/`, `/public/fonts/` - Static assets organized by purpose
-- Path alias: `@/*` maps to root (e.g., `@/components/SketchCard`)
-
-## Development Workflow
-
-```bash
-npm run dev     # Start dev server on localhost:3000
-npm run build   # Production build
-npm run lint    # ESLint check with Next.js config
-```
-
-## TypeScript Configuration
-
-- Path alias `@/*` resolves to project root
-- `jsx: "react-jsx"` (not "preserve")
-- Strict mode enabled
-
-## Component Development Guidelines
-
-1. Always add `"use client"` for components using hooks or interactivity
-2. Use Korean text for user-facing strings (no i18n needed)
-3. Maintain sketch aesthetic: prefer SketchCard over plain divs for containers
-4. For new pages in the flow, add to conditional rendering in `page.tsx` if part of onboarding, or create new routes in `/app` for feature pages
-5. When adding images, place in `/public/day1/` (or create day2/, day3/ as needed)
-
-## Critical Implementation Notes
-
-- Image transform: Use `transform scale-x-[-1]` for horizontal flip (see glint.png usage)
-- SketchCard requires explicit seed prop for deterministic sketch rendering on rerenders
-- Avoid Next.js Image optimization errors: always provide width/height props
-- ResizeObserver in SketchCard already handles responsive redrawing - don't add additional resize listeners
+- **Do** add `"use client"` to interactive components/pages; prefer Sketch components over plain divs/inputs for the aesthetic.
+- **Do** pass `seed` to RoughJS components for consistent visuals; don't add extra resize listeners (already handled).
+- **Do** keep user-visible text in Korean; no i18n layer. Code comments/vars can be English.
+- **Don't** change YAML prompt keys or JSON shapes without updating `PromptName` type union and consuming code.
+- **Don't** use `cursor: "pointer"` on `ClickableText`—use `"default"` to maintain sketch aesthetic.
+- **Don't** forget to wrap new day routes with provider in layout if they need context.
