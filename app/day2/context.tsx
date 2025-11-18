@@ -36,12 +36,12 @@ export function Day2Provider({ children }: { children: ReactNode }) {
   const [story, setStoryState] = useState<StoryStructure | null>(null);
   const [storyId, setStoryIdState] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const supabase = createClient();
 
   // Load from DB on mount
   useEffect(() => {
     const loadFromDB = async () => {
       try {
+        const supabase = createClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -80,7 +80,7 @@ export function Day2Provider({ children }: { children: ReactNode }) {
     };
 
     loadFromDB();
-  }, [supabase]);
+  }, []);
 
   const setLogline = (value: string) => {
     setLoglineState(value);
@@ -96,6 +96,7 @@ export function Day2Provider({ children }: { children: ReactNode }) {
 
   const loadStoryFromDB = async () => {
     try {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -129,6 +130,7 @@ export function Day2Provider({ children }: { children: ReactNode }) {
 
   const saveStoryToDB = async (storyToSave?: StoryStructure | null) => {
     try {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
