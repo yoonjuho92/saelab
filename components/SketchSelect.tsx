@@ -116,7 +116,7 @@ export default function SketchSelect({
   return (
     <div
       ref={hostRef}
-      className={`relative rounded-2xl px-6 py-3 bg-neutral-50 dark:bg-neutral-850 shadow-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200 ${className}`}
+      className={`relative rounded-2xl px-6 py-3 bg-neutral-50 shadow-sm hover:bg-neutral-100 transition-colors duration-200 ${className}`}
     >
       <svg
         ref={svgRef}
@@ -127,7 +127,7 @@ export default function SketchSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 dark:text-neutral-200 cursor-pointer"
+        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 cursor-pointer"
         style={{ fontFamily: "inherit" }}
       >
         <option value="" disabled>

@@ -139,7 +139,7 @@ export default function SketchButton({
       onClick={onClick}
       disabled={disabled || loading}
       type={type}
-      className={`relative rounded-2xl px-4 py-2 lg:px-6 lg:py-3 bg-neutral-100 dark:bg-neutral-800 shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 ${className}`}
+      className={`relative rounded-2xl px-4 py-2 lg:px-6 lg:py-3 bg-neutral-100 shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 ${className}`}
       style={{ cursor: disabled || loading ? "not-allowed" : "pointer" }}
     >
       <svg

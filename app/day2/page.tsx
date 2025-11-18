@@ -15,7 +15,7 @@ interface StoryCardProps {
 function StoryCard({ story }: StoryCardProps) {
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-3 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-xl lg:rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
+      <div className="p-3 lg:p-8 bg-white/80 rounded-xl lg:rounded-2xl border-2 border-neutral-300">
         <div className="space-y-6 lg:space-y-8">
           {Object.entries(story.막).map(([actName, beats]) => (
             <div key={actName}>
@@ -26,9 +26,9 @@ function StoryCard({ story }: StoryCardProps) {
                 {beats.map((beat, idx) => (
                   <div
                     key={idx}
-                    className="border-l-2 lg:border-l-4 border-neutral-800 dark:border-neutral-300 pl-2 lg:pl-4"
+                    className="border-l-2 lg:border-l-4 border-neutral-800 pl-2 lg:pl-4"
                   >
-                    <p className="font-bold text-base lg:text-2xl text-neutral-400 dark:text-neutral-500 mb-1 lg:mb-2">
+                    <p className="font-bold text-base lg:text-2xl text-neutral-400 mb-1 lg:mb-2">
                       {beat.이름}
                     </p>
                     <p className="text-sm lg:text-2xl leading-relaxed">
@@ -184,7 +184,7 @@ export default function Day2Page() {
         />
         {story ? (
           <>
-            <p className="mt-2 text-xl lg:text-2xl text-neutral-600 dark:text-neutral-400">
+            <p className="mt-2 text-xl lg:text-2xl text-neutral-600">
               로그라인: {logline}
             </p>
           </>

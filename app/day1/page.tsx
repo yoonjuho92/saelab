@@ -27,9 +27,9 @@ function StoryCard({ story }: StoryCardProps) {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-3 lg:p-8 bg-white/80 dark:bg-neutral-900/70 rounded-xl lg:rounded-2xl border-2 border-neutral-300 dark:border-neutral-700">
+      <div className="p-3 lg:p-8 bg-white/80 rounded-xl lg:rounded-2xl border-2 border-neutral-300">
         {description && (
-          <p className="text-xl lg:text-3xl text-neutral-600 dark:text-neutral-400 mb-4 lg:mb-6 text-center italic">
+          <p className="text-xl lg:text-3xl text-neutral-600 mb-4 lg:mb-6 text-center italic">
             {description}
           </p>
         )}
@@ -43,9 +43,9 @@ function StoryCard({ story }: StoryCardProps) {
                 {beats.map((beat, idx) => (
                   <div
                     key={idx}
-                    className="border-l-2 lg:border-l-4 border-neutral-800 dark:border-neutral-300 pl-2 lg:pl-4"
+                    className="border-l-2 lg:border-l-4 border-neutral-800 pl-2 lg:pl-4"
                   >
-                    <p className="font-bold text-base lg:text-2xl text-neutral-400 dark:text-neutral-500 mb-1 lg:mb-2">
+                    <p className="font-bold text-base lg:text-2xl text-neutral-400 mb-1 lg:mb-2">
                       {beat.이름}
                     </p>
                     <p className="text-sm lg:text-2xl leading-relaxed">
@@ -310,7 +310,7 @@ export default function Day() {
           />
         </div>
 
-        <div className="border-b-2 flex justify-center items-center flex-col lg:flex-row border-neutral-300 dark:border-neutral-700 pb-6">
+        <div className="border-b-2 flex justify-center items-center flex-col lg:flex-row border-neutral-300 pb-6">
           <p className="text-center mr-2">
             로그라인이 생각나지 않으면 AI의 도움을 받아
           </p>
@@ -370,8 +370,8 @@ export default function Day() {
       </div>
 
       {/* 로그라인 */}
-      <div className="mb-4 pb-3 border-b-2 border-neutral-300 dark:border-neutral-700">
-        <p className="text-xs lg:text-base font-medium text-neutral-500 dark:text-neutral-500 uppercase tracking-wider mb-1">
+      <div className="mb-4 pb-3 border-b-2 border-neutral-300">
+        <p className="text-xs lg:text-base font-medium text-neutral-500 uppercase tracking-wider mb-1">
           로그라인
         </p>
         <div className="overflow-x-auto">
@@ -388,7 +388,7 @@ export default function Day() {
             onClick={() => setSelectedFramework("gulino")}
             className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "gulino"
-                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >
@@ -400,7 +400,7 @@ export default function Day() {
             onClick={() => setSelectedFramework("vogel")}
             className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "vogel"
-                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >
@@ -412,7 +412,7 @@ export default function Day() {
             onClick={() => setSelectedFramework("snider")}
             className={`text-base lg:text-3xl pb-1 lg:pb-2 transition-all ${
               selectedFramework === "snider"
-                ? "border-b-2 lg:border-b-4 border-neutral-800 dark:border-neutral-200 font-semibold"
+                ? "border-b-2 lg:border-b-4 border-neutral-800 font-semibold"
                 : "opacity-60 hover:opacity-100"
             }`}
           >

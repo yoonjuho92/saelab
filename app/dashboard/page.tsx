@@ -17,7 +17,7 @@ function DayCard({ day, description, onClick }: DayCardProps) {
       className="py-4 px-6 cursor-pointer hover:shadow-lg transition-shadow"
       onClick={onClick}
     >
-      <div className="text-xl lg:text-2xl font-bold mb-2 text-neutral-600 dark:text-neutral-400">
+      <div className="text-xl lg:text-2xl font-bold mb-2 text-neutral-600">
         Day {day}
       </div>
       <div className="text-xl lg:text-2xl">{description}</div>

@@ -124,7 +124,7 @@ export default function SketchInput({
   return (
     <div
       ref={hostRef}
-      className={`relative rounded-2xl px-6 py-3 bg-white/80 dark:bg-neutral-900/70 shadow-sm ${className}`}
+      className={`relative rounded-2xl px-6 py-3 bg-white/80 shadow-sm ${className}`}
     >
       <svg
         ref={svgRef}
@@ -139,7 +139,7 @@ export default function SketchInput({
         rows={multiline ? rows : undefined}
         type={multiline ? undefined : type}
         required={required}
-        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 placeholder:lg:text-2xl resize-none"
+        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none"
         style={{ fontFamily: "inherit" }}
       />
     </div>

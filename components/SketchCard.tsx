@@ -133,7 +133,7 @@ export default function SketchCard({
     <div
       ref={hostRef}
       onClick={onClick}
-      className={`relative rounded-2xl p-6 bg-white/80 dark:bg-neutral-900/70 shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:shadow-md ${
+      className={`relative rounded-2xl p-6 bg-white/80 shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:shadow-md ${
         onClick ? "cursor-pointer" : ""
       } ${className}`}
     >

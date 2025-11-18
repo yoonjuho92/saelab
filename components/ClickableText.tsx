@@ -24,7 +24,7 @@ export default function ClickableText({
         relative inline-block px-4 py-2 text-2xl lg:text-4xl
         transition-all duration-300
         bg-transparent border-none
-        text-neutral-800 dark:text-neutral-200
+        text-neutral-800
         ${className}
       `}
       style={{
