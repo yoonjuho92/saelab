@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ClickableText from "@/components/ClickableText";
@@ -8,7 +8,7 @@ import SketchInput from "@/components/SketchInput";
 import SketchButton from "@/components/SketchButton";
 import Image from "next/image";
 
-export default function Login() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -110,5 +110,19 @@ export default function Login() {
         <ClickableText onClick={() => router.push("/")}>← 뒤로</ClickableText>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          로딩 중...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
