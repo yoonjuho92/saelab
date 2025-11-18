@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ClickableText from "@/components/ClickableText";
 import SketchInput from "@/components/SketchInput";
 import SketchButton from "@/components/SketchButton";
@@ -60,6 +61,7 @@ function StoryCard({ story, lockedBeats, onToggleLock }: StoryCardProps) {
 }
 
 export default function Day2Page() {
+  const router = useRouter();
   const { logline, setLogline, story, setStory, saveStoryToDB } =
     useDay2Context();
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,6 +73,12 @@ export default function Day2Page() {
     null
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [extractedStructure, setExtractedStructure] = useState<{
+    처음: string;
+    중간: string;
+    끝: string;
+  } | null>(null);
+  const [isExtractingStructure, setIsExtractingStructure] = useState(false);
 
   // story가 변경되면 editableStory 동기화
   useEffect(() => {
@@ -127,7 +135,7 @@ export default function Day2Page() {
       // Save to database with the generated story
       await saveStoryToDB(data.result);
 
-      handlePageChange(5);
+      handlePageChange(4);
     } catch (error) {
       console.error("Error generating stories:", error);
       alert("이야기 생성 중 오류가 발생했습니다.");
@@ -314,28 +322,59 @@ export default function Day2Page() {
         height={100}
         className="transform scale-x-[-1]"
       />
-      <h3 className="text-2xl lg:text-3xl font-bold mb-4">로그라인이란?</h3>
-      <p className="text-lg lg:text-2xl leading-relaxed mb-4">
-        로그라인은 당신의 이야기를 한 문장으로 요약한 것이에요.
+      <h3 className=" font-bold mb-4">로그라인이란?</h3>
+      <p className=" leading-relaxed mb-4">
+        로그라인은 이야기가 어떤 이야기인지를 한 문장으로 정리한, 이야기의
+        씨앗이라고 할 수 있어요. 로그라인을 &ldquo;A가 B를 위해 C하는
+        이야기&rdquo;라고도 하는데요.
       </p>
-      <p className="text-lg lg:text-2xl leading-relaxed mb-4">
-        &ldquo;<strong>누가</strong>(주인공), <strong>무엇을</strong>(목표),{" "}
-        <strong>왜</strong>(장애물과 갈등)&rdquo; 이 세 가지를 담고 있어야 해요.
+      <p className="leading-relaxed mb-4">
+        &ldquo;<strong>A</strong>(주인공)이, <strong>B</strong>(목표)를 위해서,{" "}
+        <strong>C</strong>(목표 달성을 위한 고군분투)하는 이야기&rdquo; 이 세
+        요소가 로그라인에 담겨 있어야 한다는 뜻이에요!
       </p>
-      <p className="text-lg lg:text-2xl leading-relaxed mb-4">
-        예를 들어 당신의 로그라인은:
+      <p className="leading-relaxed mb-4">
+        당신의 로그라인에는 이 세 가지가 다 담겨있나요?
       </p>
       <div className="bg-amber-50 p-4 rounded-lg border-2 border-amber-200 mb-6">
         <p className="text-xl lg:text-2xl font-bold text-neutral-800">
           {logline}
         </p>
       </div>
-      <p className="text-lg lg:text-2xl leading-relaxed">
-        이 로그라인을 바탕으로 이야기의 뼈대를 만들었어요!
-      </p>
       <div className="flex mt-6 justify-center">
-        <ClickableText onClick={() => handlePageChange(6)}>
-          [ 다음 ]
+        <ClickableText
+          onClick={async () => {
+            if (!story) {
+              alert("먼저 이야기를 생성해주세요!");
+              return;
+            }
+            setIsExtractingStructure(true);
+            try {
+              const storyText = JSON.stringify(story, null, 2);
+              const response = await fetch("/api/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  promptName: "extract_structure",
+                  variables: { story: storyText },
+                  responseFormat: "json",
+                }),
+              });
+              if (!response.ok) throw new Error("Failed to extract structure");
+              const data = await response.json();
+              setExtractedStructure(data.result);
+              handlePageChange(6);
+            } catch (error) {
+              console.error("Error:", error);
+              alert("구조 추출에 실패했습니다.");
+            } finally {
+              setIsExtractingStructure(false);
+            }
+          }}
+        >
+          {isExtractingStructure
+            ? "[ 분석 중... ]"
+            : "[ 이제 구조를 살펴 볼까요? ]"}
         </ClickableText>
       </div>
     </div>
@@ -343,52 +382,55 @@ export default function Day2Page() {
 
   const page6 = (
     <div className="flex flex-col w-full">
-      <Image
-        src="/구조(열쇠).png"
-        alt="Lookmal Logo"
-        width={100}
-        height={100}
-        className="transform scale-x-[-1]"
-      />
-      <h3 className="text-2xl lg:text-3xl font-bold mb-4">3막 구조란?</h3>
-      <p className="text-lg lg:text-2xl leading-relaxed mb-4">
-        이야기는 크게 <strong>시작(1막)</strong>, <strong>중간(2막)</strong>,{" "}
-        <strong>끝(3막)</strong>으로 나뉘어요.
-      </p>
-      <div className="space-y-4 mb-6">
-        <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
-          <h4 className="text-xl lg:text-2xl font-bold mb-2">
-            1막: 설정과 문제 발생
-          </h4>
-          <p className="text-base lg:text-xl">
-            주인공의 평범한 일상과 사건의 시작
+      {extractedStructure ? (
+        <>
+          <p className="text-center text-lg lg:text-2xl mb-8">
+            저번 시간에 했던 것처럼, 이번에는 우리가 만든 이야기에서
+            처음-중간-끝을 정리해 볼까요:
           </p>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg border-2 border-green-200">
-          <h4 className="text-xl lg:text-2xl font-bold mb-2">
-            2막: 갈등과 시련
-          </h4>
-          <p className="text-base lg:text-xl">
-            목표를 향한 도전과 실패, 그리고 진짜 목표의 발견
+
+          <div className="space-y-6 mb-8">
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                처음 (Beginning)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.처음}
+              </p>
+            </div>
+
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                중간 (Middle)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.중간}
+              </p>
+            </div>
+
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
+              <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
+                끝 (End)
+              </h3>
+              <p className="text-base lg:text-2xl leading-relaxed">
+                {extractedStructure.끝}
+              </p>
+            </div>
+          </div>
+
+          <p className="text-center text-lg lg:text-2xl">
+            당신이 생각한 이야기의 처음-중간-끝과 같을까요?
           </p>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-200">
-          <h4 className="text-xl lg:text-2xl font-bold mb-2">
-            3막: 최종 대결과 결말
-          </h4>
-          <p className="text-base lg:text-xl">
-            마지막 시도와 변화된 주인공의 모습
-          </p>
-        </div>
-      </div>
-      <p className="text-lg lg:text-2xl leading-relaxed">
-        다음 페이지에서 당신의 이야기 구조를 직접 수정할 수 있어요!
-      </p>
-      <div className="flex mt-6 justify-center">
-        <ClickableText onClick={() => handlePageChange(7)}>
-          [ 다음 ]
-        </ClickableText>
-      </div>
+
+          <div className="flex justify-center">
+            <ClickableText onClick={() => handlePageChange(7)}>
+              [ 이제 그럼, 마지막으로 직접 이야기의 구조를 수정하러 가 볼까요! ]
+            </ClickableText>
+          </div>
+        </>
+      ) : (
+        <p className="text-center text-lg lg:text-2xl">분석 중...</p>
+      )}
     </div>
   );
 
@@ -604,13 +646,19 @@ export default function Day2Page() {
         {currentPage === 7 && page7}
       </div>
 
-      {currentPage > 1 && (
+      {currentPage === 1 ? (
+        <div className="fixed bottom-8 left-8">
+          <ClickableText onClick={() => router.push("/dashboard")}>
+            ← 대시보드
+          </ClickableText>
+        </div>
+      ) : currentPage > 1 ? (
         <div className="fixed bottom-8 left-8">
           <ClickableText onClick={() => handlePageChange(currentPage - 1)}>
             ← 뒤로
           </ClickableText>
         </div>
-      )}
+      ) : null}
 
       {currentPage < 7 && (
         <div className="fixed bottom-8 right-8">
