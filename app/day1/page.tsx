@@ -107,7 +107,7 @@ export default function Day() {
 
       <div className="mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(2)}>
-          [다음]
+          [ 다음 ]
         </ClickableText>
       </div>
     </div>
@@ -121,7 +121,7 @@ export default function Day() {
       </p>
       <div className="flex mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(3)}>
-          [다음]
+          [ 다음 ]
         </ClickableText>
       </div>
     </div>
@@ -131,13 +131,13 @@ export default function Day() {
     <div>
       <Image src="/구조(열쇠).png" alt="열쇠" width={25} height={25} />
       <p>
-        그래서 오늘, 자신만의 이야기를 만드는 5일 여정의 첫날에는 길고, 크고,
+        그래서 오늘, 자신만의 이야기를 만드는 5일 여정의 첫 시간에는 길고, 크고,
         복잡한 이야기를 만드는 과정을 쉽고 재밌게 만들어 줄 도구인{" "}
         <span className="font-bold">구조</span>에 대해 배워 볼 거예요!
       </p>
       <div className="flex mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(4)}>
-          [직접 쓰는 건 내일부터! 오늘은 AI의 도움을 받아 볼까요?]
+          [ 직접 쓰는 건 다음 시간부터! 지금은 AI의 도움을 받아 볼까요? ]
         </ClickableText>
       </div>
     </div>
@@ -452,7 +452,7 @@ export default function Day() {
       </div>
       <div className="mt-6 items-cener justify-center">
         <ClickableText onClick={() => handlePageChange(7)}>
-          [다음]
+          [ 다음 ]
         </ClickableText>
       </div>
     </div>
@@ -472,7 +472,7 @@ export default function Day() {
       </div>
       <div className="mt-6 items-cener justify-center">
         <ClickableText onClick={() => handlePageChange(8)}>
-          [당연한 소리처럼 보일 수 있겠지만...]
+          [ 당연한 소리처럼 보일 수 있겠지만... ]
         </ClickableText>
       </div>
     </div>
@@ -497,8 +497,8 @@ export default function Day() {
       <div className="mt-6 items-cener justify-center">
         <ClickableText onClick={handleExtractStructure}>
           {isExtractingStructure
-            ? "[분석 중...]"
-            : "[이 구조를 우리가 만든 이야기에 적용해 볼까요?]"}
+            ? "[ 분석 중... ]"
+            : "[ 이 구조를 우리가 만든 이야기에 적용해 볼까요? ]"}
         </ClickableText>
       </div>
     </div>
@@ -548,7 +548,7 @@ export default function Day() {
 
           <div className="flex justify-center">
             <ClickableText onClick={() => handlePageChange(10)}>
-              [다음]
+              [ 다음 ]
             </ClickableText>
           </div>
         </div>
@@ -566,12 +566,17 @@ export default function Day() {
         <p>
           <Image src="/슬레이트.png" alt="슬레이트" width={50} height={50} />
           <span className="font-bold">구조</span>는 이야기를 만드는 걸 도와주는
-          도구입니다. 오늘은 간단한 로그라인으로 AI의 도움을 받아 이야기를
+          도구입니다. 이번 시간엔 간단한 로그라인으로 AI의 도움을 받아 이야기를
           만들고, 그 과정에 구조란 어떤 건지를 배워 봤습니다. 어떠셨나요? 다음
           시간부터는 본격적으로 나만의 이야기를 만들어 보려고 합니다. (당연히
-          오늘 배운 구조를 활용해서!) 간단하게 어떤 이야기를 만들고 싶은지
+          지금 배운 구조를 활용해서!) 간단하게 어떤 이야기를 만들고 싶은지
           생각해 오면 좋을 것 같아요!
         </p>
+      </div>
+      <div className="mt-6 justify-center">
+        <ClickableText onClick={() => router.push("/")}>
+          [ 처음으로 돌아가기 ]
+        </ClickableText>
       </div>
     </div>
   );

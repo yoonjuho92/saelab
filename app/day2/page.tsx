@@ -247,7 +247,7 @@ export default function Day2Page() {
         height={10}
         className="transform scale-x-[-1]"
       />
-      <p>오늘은 드디어 나만의 이야기를 시작해 볼 거예요!</p>
+      <p>이제 드디어 나만의 이야기를 시작해 볼 거예요!</p>
       <div className="flex mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(2)}>
           [ 다음 ]
@@ -257,18 +257,15 @@ export default function Day2Page() {
   );
 
   const page2 = (
-    <div className="flex flex-col">
+    <div className="flex justify-center items-center flex-col">
       <Image
-        src="/포스트잇.png"
+        src="/짱룩말.gif"
         alt="Lookmal Logo"
-        width={50}
-        height={100}
+        width={200}
+        height={200}
         className="transform scale-x-[-1]"
       />
-      <p>
-        오늘은 나의 로그라인을 가지고, 지난주에 했던 이야기 구조 짜기를 해 볼
-        거예요.
-      </p>
+      <p>그럼, 시작해볼까요!</p>
       <div className="flex mt-6 justify-center">
         <ClickableText onClick={() => handlePageChange(3)}>
           [ 다음 ]
@@ -287,8 +284,8 @@ export default function Day2Page() {
         className="transform scale-x-[-1]"
       />
       <p>
-        그럼, 지난 시간에 연습해 본 대로, 내가 만들고 싶은 이야기의 씨앗,
-        로그라인을 입력해 볼까요?
+        지난 시간에 연습해 본 대로, 내가 만들고 싶은 이야기의 씨앗, 로그라인을
+        입력해 주세요:
       </p>
 
       <div className="mt-6">
