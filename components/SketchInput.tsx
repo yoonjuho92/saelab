@@ -124,7 +124,7 @@ export default function SketchInput({
   return (
     <div
       ref={hostRef}
-      className={`relative rounded-2xl px-6 py-3 bg-white/80 shadow-sm ${className}`}
+      className={`relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm ${className}`}
     >
       <svg
         ref={svgRef}

@@ -17,6 +17,8 @@ interface Prompts {
   create_from_logline_w_snider: PromptTemplate;
   extract_plot_point: PromptTemplate;
   extract_structure: PromptTemplate;
+  create_from_logline: PromptTemplate;
+  revise_story_structure: PromptTemplate;
 }
 
 let prompts: Prompts | null = null;

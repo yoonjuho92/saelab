@@ -18,7 +18,7 @@ function DayCard({ day, description, onClick }: DayCardProps) {
       onClick={onClick}
     >
       <div className="text-xl lg:text-2xl font-bold mb-2 text-neutral-600">
-        Day {day}
+        {day - 1}단계
       </div>
       <div className="text-xl lg:text-2xl">{description}</div>
     </SketchCard>
@@ -64,7 +64,7 @@ export default function DashboardPage() {
           />
         </div>
 
-        <p className="mb-6">오늘이 몇 번째 방문인가요?</p>
+        <p className="mb-6">어디서부터 시작해 볼까요?</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {days.map((dayInfo) => (

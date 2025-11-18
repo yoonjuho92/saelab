@@ -7,7 +7,9 @@ type PromptName =
   | "create_from_logline_w_vogel"
   | "create_from_logline_w_snider"
   | "extract_plot_point"
-  | "extract_structure";
+  | "extract_structure"
+  | "create_from_logline"
+  | "revise_story_structure";
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
             content: user,
           },
         ],
-        temperature: 0.8,
+        temperature: 1,
         max_tokens: 4000,
         response_format:
           responseFormat === "json" ? { type: "json_object" } : undefined,

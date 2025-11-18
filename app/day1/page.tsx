@@ -514,7 +514,7 @@ export default function Day() {
           </p>
 
           <div className="space-y-6">
-            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
               <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
                 처음 (Beginning)
               </h3>
@@ -523,7 +523,7 @@ export default function Day() {
               </p>
             </div>
 
-            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
               <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
                 중간 (Middle)
               </h3>
@@ -532,7 +532,7 @@ export default function Day() {
               </p>
             </div>
 
-            <div className="p-6 bg-white/80 dark:bg-neutral-900/70 rounded-xl border-2 border-neutral-300 dark:border-neutral-700">
+            <div className="p-6 bg-white/80 rounded-xl border-2 border-neutral-300">
               <h3 className="text-xl lg:text-3xl font-bold mb-3 text-center">
                 끝 (End)
               </h3>
