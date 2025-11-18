@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
+        model: "gpt-4.1",
         messages: [
           {
             role: "system",
@@ -69,8 +69,6 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     const content = data.choices[0].message.content.trim();
-
-    console.log("OpenAI Response:", content);
 
     // JSON 응답인 경우 파싱해서 반환
     if (responseFormat === "json") {

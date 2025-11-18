@@ -23,6 +23,12 @@ interface Stories {
   snider: StoryStructure | null;
 }
 
+export interface ExtractedStructure {
+  처음: string;
+  중간: string;
+  끝: string;
+}
+
 interface Day1ContextType {
   logline: string;
   setLogline: (value: string) => void;
@@ -30,6 +36,8 @@ interface Day1ContextType {
   setStories: (value: Stories) => void;
   plotPoints: string[];
   setPlotPoints: (value: string[]) => void;
+  extractedStructure: ExtractedStructure | null;
+  setExtractedStructure: (value: ExtractedStructure | null) => void;
 }
 
 const Day1Context = createContext<Day1ContextType | undefined>(undefined);
@@ -38,6 +46,7 @@ const STORAGE_KEYS = {
   LOGLINE: "day1_logline",
   STORIES: "day1_stories",
   PLOT_POINTS: "day1_plotPoints",
+  EXTRACTED_STRUCTURE: "day1_extractedStructure",
 };
 
 export function Day1Provider({ children }: { children: ReactNode }) {
@@ -48,6 +57,8 @@ export function Day1Provider({ children }: { children: ReactNode }) {
     snider: null,
   });
   const [plotPoints, setPlotPointsState] = useState<string[]>([]);
+  const [extractedStructure, setExtractedStructureState] =
+    useState<ExtractedStructure | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load from localStorage on mount
@@ -56,6 +67,9 @@ export function Day1Provider({ children }: { children: ReactNode }) {
       const savedLogline = localStorage.getItem(STORAGE_KEYS.LOGLINE);
       const savedStories = localStorage.getItem(STORAGE_KEYS.STORIES);
       const savedPlotPoints = localStorage.getItem(STORAGE_KEYS.PLOT_POINTS);
+      const savedExtractedStructure = localStorage.getItem(
+        STORAGE_KEYS.EXTRACTED_STRUCTURE
+      );
 
       if (savedLogline) {
         setLoglineState(savedLogline);
@@ -65,6 +79,9 @@ export function Day1Provider({ children }: { children: ReactNode }) {
       }
       if (savedPlotPoints) {
         setPlotPointsState(JSON.parse(savedPlotPoints));
+      }
+      if (savedExtractedStructure) {
+        setExtractedStructureState(JSON.parse(savedExtractedStructure));
       }
     } catch (error) {
       console.error("Error loading from localStorage:", error);
@@ -101,6 +118,22 @@ export function Day1Provider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setExtractedStructure = (value: ExtractedStructure | null) => {
+    setExtractedStructureState(value);
+    try {
+      if (value === null) {
+        localStorage.removeItem(STORAGE_KEYS.EXTRACTED_STRUCTURE);
+      } else {
+        localStorage.setItem(
+          STORAGE_KEYS.EXTRACTED_STRUCTURE,
+          JSON.stringify(value)
+        );
+      }
+    } catch (error) {
+      console.error("Error saving extractedStructure to localStorage:", error);
+    }
+  };
+
   // Don't render until data is loaded
   if (!isLoaded) {
     return null;
@@ -115,6 +148,8 @@ export function Day1Provider({ children }: { children: ReactNode }) {
         setStories,
         plotPoints,
         setPlotPoints,
+        extractedStructure,
+        setExtractedStructure,
       }}
     >
       {children}

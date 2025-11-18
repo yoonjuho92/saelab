@@ -17,7 +17,8 @@
 - Day 1 wraps content in `Day1Provider` via `app/day1/layout.tsx` — ensures context available to all child routes.
 - Context uses `isLoaded` flag to prevent hydration mismatch: renders `null` until `localStorage` is read on client.
 - All state setters (e.g., `setLogline`) automatically persist to `localStorage`; no manual save calls needed.
-- TypeScript types: `StoryStructure` defines JSON shape from API; `Stories` holds all three frameworks (`gulino`, `vogel`, `snider`).
+- TypeScript types: `StoryStructure` defines JSON shape from API; `Stories` holds all three frameworks (`gulino`, `vogel`, `snider`); `ExtractedStructure` for plot structure (`처음`, `중간`, `끝`).
+- Context hook: `useDay1Context()` throws if used outside provider — always wrap routes in `Day1Provider` first.
 
 ## UI Components (RoughJS)
 
@@ -36,11 +37,11 @@
 
 ## AI/Prompt Integration
 
-- Prompts: YAML at `lib/prompts.yaml` with templates for `create_logline`, `create_from_logline_w_{gulino|vogel|snider}`, `extract_plot_point` (and `extract_structure` available). `formatPrompt()` substitutes `{variables}` placeholders.
+- Prompts: YAML at `lib/prompts.yaml` with templates for `create_logline`, `create_from_logline_w_{gulino|vogel|snider}`, `extract_plot_point`, and `extract_structure`. `formatPrompt()` in `lib/promptLoader.ts` substitutes `{variables}` placeholders.
 - API: `app/api/generate/route.ts` uses `OPENAI_API_KEY` env var and model `gpt-4.1-mini`. Set `responseFormat: "json"` to enforce JSON mode and parse `message.content`.
-- Client usage example: `app/day1/page.tsx` calls the API in parallel (`Promise.all`) to produce three frameworks, each returning `{ metadata, 막: { '1막'|'2막'|'3막': [{이름,내용}] } }` JSON.
+- Client usage: `app/day1/page.tsx` calls `POST /api/generate` in parallel (`Promise.all`) to produce three frameworks, each returning `{ metadata, 막: { '1막'|'2막'|'3막': [{이름,내용}] } }` JSON.
 - Error handling: JSON parse failures return 500 with clear message; text mode returns `{ result: content }` directly.
-- Always await response, check `response.ok`, and handle errors with user-facing alerts.
+- Always await response, check `response.ok`, and handle errors with user-facing alerts (e.g., `alert()` for quick feedback).
 
 ## Styling & Conventions
 

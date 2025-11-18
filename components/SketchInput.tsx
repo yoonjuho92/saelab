@@ -17,6 +17,8 @@ interface SketchInputProps {
   radius?: number;
   multiline?: boolean;
   rows?: number;
+  type?: string;
+  required?: boolean;
 }
 
 export default function SketchInput({
@@ -33,6 +35,8 @@ export default function SketchInput({
   radius = 0,
   multiline = false,
   rows = 3,
+  type = "text",
+  required = false,
 }: SketchInputProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -133,6 +137,8 @@ export default function SketchInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={multiline ? rows : undefined}
+        type={multiline ? undefined : type}
+        required={required}
         className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 placeholder:lg:text-2xl resize-none"
         style={{ fontFamily: "inherit" }}
       />

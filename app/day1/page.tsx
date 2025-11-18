@@ -66,18 +66,20 @@ export default function Day() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const { logline, setLogline, stories, setStories } = useDay1Context();
+  const {
+    logline,
+    setLogline,
+    stories,
+    setStories,
+    extractedStructure,
+    setExtractedStructure,
+  } = useDay1Context();
   const [genre, setGenre] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isGeneratingStories, setIsGeneratingStories] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState<
     "gulino" | "vogel" | "snider"
   >("gulino");
-  const [extractedStructure, setExtractedStructure] = useState<{
-    처음: string;
-    중간: string;
-    끝: string;
-  } | null>(null);
   const [isExtractingStructure, setIsExtractingStructure] = useState(false);
 
   const genreOptions = [
@@ -354,7 +356,7 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col pt-3 py-4 pt-8">
+    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
       <div className="text-center text-base lg:text-4xl mb-4 flexitems-center justify-center gap-1">
         입력한 이야기의 씨앗으로 AI가 만든 세 가지{" "}
         <span className="font-bold">구조</span>의 이야기를 살펴볼까요?
@@ -390,7 +392,7 @@ export default function Day() {
                 : "opacity-60 hover:opacity-100"
             }`}
           >
-            줄리노
+            영화적 구조
           </button>
         )}
         {stories.vogel && (
@@ -402,7 +404,7 @@ export default function Day() {
                 : "opacity-60 hover:opacity-100"
             }`}
           >
-            보글러
+            영웅 서사 구조
           </button>
         )}
         {stories.snider && (
@@ -414,7 +416,7 @@ export default function Day() {
                 : "opacity-60 hover:opacity-100"
             }`}
           >
-            스나이더
+            15장 구조
           </button>
         )}
       </div>
@@ -507,7 +509,7 @@ export default function Day() {
       {extractedStructure ? (
         <div className="w-full max-w-4xl">
           <p className="text-center mb-8">
-            우리가 만든 줄리노 구조의 이야기를 3막 구조로 분석하면 이렇게
+            우리가 만든 영화적 구조의 이야기를 3막 구조로 분석하면 이렇게
             됩니다:
           </p>
 
