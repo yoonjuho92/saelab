@@ -119,7 +119,50 @@ export default function SketchInput({
     };
   }, [stroke, strokeWidth, roughness, bowing, inset, seed, radius]);
 
-  const InputComponent = multiline ? "textarea" : "input";
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (multiline && textareaRef.current) {
+      const textarea = textareaRef.current;
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  }, [value, multiline]);
+
+  if (multiline) {
+    return (
+      <div
+        ref={hostRef}
+        className={`relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm ${className}`}
+      >
+        <svg
+          ref={svgRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          role="presentation"
+        />
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          rows={rows}
+          required={required}
+          className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none overflow-hidden"
+          style={{
+            fontFamily: "inherit",
+            height: "auto",
+            minHeight: `${rows * 1.5}em`,
+          }}
+          onInput={(e) => {
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = "auto";
+            target.style.height = target.scrollHeight + "px";
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -132,38 +175,14 @@ export default function SketchInput({
         className="pointer-events-none absolute inset-0"
         role="presentation"
       />
-      <InputComponent
+      <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        rows={multiline ? rows : undefined}
-        type={multiline ? undefined : type}
+        type={type}
         required={required}
-        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none overflow-hidden"
-        style={{
-          fontFamily: "inherit",
-          height: multiline ? "auto" : undefined,
-          minHeight: multiline ? `${rows * 1.5}em` : undefined,
-        }}
-        onInput={
-          multiline
-            ? (e) => {
-                const target = e.target as HTMLTextAreaElement;
-                target.style.height = "auto";
-                target.style.height = target.scrollHeight + "px";
-              }
-            : undefined
-        }
-        ref={
-          multiline
-            ? (el: HTMLTextAreaElement | null) => {
-                if (el) {
-                  el.style.height = "auto";
-                  el.style.height = el.scrollHeight + "px";
-                }
-              }
-            : undefined
-        }
+        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl"
+        style={{ fontFamily: "inherit" }}
       />
     </div>
   );
