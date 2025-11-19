@@ -98,6 +98,10 @@ function LoginForm() {
             {loading ? "처리 중..." : "로그인하기"}
           </SketchButton>
         </form>
+        <p className="mt-6 text-xl">
+          로그인을 해야만 사용할 수 있어요. 가입을 위해서는 info@chekchek.me로
+          문의해 주세요.
+        </p>
 
         {message && (
           <div className="mt-4 text-center text-xl lg:text-2xl text-neutral-600">

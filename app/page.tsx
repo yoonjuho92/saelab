@@ -41,14 +41,20 @@ export default function Home() {
   );
 
   const page2 = (
-    <div>
+    <div className="w-full flex flex-col items-center">
       <p>당신은...</p>
-      <div className="flex flex-col gap-4 mt-4">
-        <SketchCard className="py-2 w-fit" onClick={() => router.push("/day1")}>
-          오늘 처음 왔어요!
+      <div className="flex w-full max-w-4xl flex-col gap-4 mt-4">
+        <SketchCard
+          className="py-2 w-full text-center"
+          onClick={() => router.push("/day1")}
+        >
+          처음이에요
         </SketchCard>
-        <SketchCard className="py-2 w-fit" onClick={() => router.push("/login")}>
-          저번에 시작했던 걸 이어서 하고 싶어요!
+        <SketchCard
+          className="py-2 w-full text-center"
+          onClick={() => router.push("/login")}
+        >
+          이어서 하기
         </SketchCard>
       </div>
     </div>
@@ -57,7 +63,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex-col flex items-center justify-center relative">
       <div
-        className={`transition-opacity duration-300 ${
+        className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
         }`}
       >

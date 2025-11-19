@@ -36,7 +36,7 @@ function StoryCard({ story }: StoryCardProps) {
         <div className="space-y-6 lg:space-y-8">
           {Object.entries(story.막).map(([actName, beats]) => (
             <div key={actName}>
-              <h4 className="text-sm lg:text-2xl font-bold mb-3 lg:mb-4 uppercase tracking-wider">
+              <h4 className="text-lg lg:text-2xl font-bold mb-3 lg:mb-4 uppercase tracking-wider">
                 {actName}
               </h4>
               <div className="space-y-3 lg:space-y-4 pl-1 lg:pl-2">
@@ -48,7 +48,7 @@ function StoryCard({ story }: StoryCardProps) {
                     <p className="font-bold text-base lg:text-2xl text-neutral-400 mb-1 lg:mb-2">
                       {beat.이름}
                     </p>
-                    <p className="text-sm lg:text-2xl leading-relaxed">
+                    <p className="text-lg lg:text-2xl leading-relaxed">
                       {beat.내용}
                     </p>
                   </div>
@@ -293,47 +293,21 @@ export default function Day() {
       <p className="text-center">
         지금 생각나는 이야기의 씨앗, 로그라인을 입력해 주세요.
       </p>
-      <p className="text-xl lg:text-2xl text-center">
-        지금 입력하는 로그라인은 구조를 배우기 위한 연습용이고, 진짜 나만의
-        이야기를 만드는 데 쓸 로그라인은 다음 시간에 쓸 거예요! 그러니 부담 갖지
-        말고 아무 로그라인이나 입력해 주세요. 힘들면 AI를 활용해도 좋습니다!
+      <p className="text-xl mb-5 lg:text-2xl text-center">
+        이 페이지는 연습용! 저장이 되지 않습니다.
       </p>
 
       <div className="space-y-6 w-full">
         <div>
-          <label className="block text-xl mb-2">로그라인</label>
+          <label className="block text-xl lg:text-3xl mb-2">로그라인</label>
           <SketchInput
+            className="text-xl lg:text-3xl"
             value={logline}
+            multiline
             onChange={setLogline}
             placeholder="예: 한 젊은 농부가 은하계를 구하기 위해 제다이가 되는 여정을 떠난다."
             seed={42}
           />
-        </div>
-
-        <div className="border-b-2 flex justify-center items-center flex-col lg:flex-row border-neutral-300 pb-6">
-          <p className="text-center mr-2">
-            로그라인이 생각나지 않으면 AI의 도움을 받아
-          </p>
-          <div className="flex items-center flex-row text-2xl justify-center gap-4">
-            <SketchSelect
-              value={genre}
-              onChange={setGenre}
-              options={genreOptions}
-              placeholder="장르"
-              seed={43}
-            />
-            <p className="lg:text-3xl">장르의</p>
-            <div className="flex  justify-center">
-              <SketchButton
-                onClick={handleGenerateLogline}
-                loading={isGenerating}
-                disabled={isGenerating}
-                seed={44}
-              >
-                {isGenerating ? "생성 중..." : "로그라인 생성하기"}
-              </SketchButton>
-            </div>
-          </div>
         </div>
 
         <div className="flex justify-center mt-6">
@@ -344,11 +318,21 @@ export default function Day() {
             seed={45}
             className="w-fit"
           >
-            {isGeneratingStories
-              ? "이야기 만드는 중..."
-              : logline.trim()
-              ? "로그라인으로 이야기 만들기! (약 20초 소요)"
-              : "로그라인을 먼저 입력해주세요"}
+            {isGeneratingStories ? (
+              <>
+                이야기 만드는 중...
+                <Image
+                  src="/로딩_전구.gif"
+                  alt="로딩 전구"
+                  width={25}
+                  height={25}
+                />
+              </>
+            ) : logline.trim() ? (
+              "이야기 만들기! (약 20초 소요)"
+            ) : (
+              "로그라인을 먼저 입력해주세요"
+            )}
           </SketchButton>
         </div>
       </div>
@@ -356,7 +340,7 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center px-4 lg:px-4 h-screen flex flex-col py-4">
+    <div className="w-full justify-center h-screen flex flex-col py-4">
       <div className="text-center text-base lg:text-4xl mb-4 flexitems-center justify-center gap-1">
         입력한 이야기의 씨앗으로 AI가 만든 세 가지{" "}
         <span className="font-bold">구조</span>의 이야기를 살펴볼까요?
@@ -371,11 +355,11 @@ export default function Day() {
 
       {/* 로그라인 */}
       <div className="mb-4 pb-3 border-b-2 border-neutral-300">
-        <p className="text-xs lg:text-base font-medium text-neutral-500 uppercase tracking-wider mb-1">
+        <p className="text-lg lg:text-base font-medium text-neutral-500 uppercase tracking-wider mb-1">
           로그라인
         </p>
         <div className="overflow-x-auto">
-          <p className="text-sm lg:text-2xl leading-relaxed text-center whitespace-nowrap">
+          <p className="text-lg lg:text-2xl leading-relaxed text-center whitespace-nowrap">
             {logline}
           </p>
         </div>
@@ -461,7 +445,7 @@ export default function Day() {
   const page7 = (
     <div className="flex items-center flex-col">
       <div>
-        <p>
+        <p className="mb-5">
           2,500년 전, 이야기에 대한 가장 오래되고 가장 유명한 책인
           &lt;시학&gt;에서 아리스토텔레스는 이렇게 말했어요.
         </p>
@@ -484,28 +468,37 @@ export default function Day() {
         <Image src="/책.png" alt="책" width={50} height={50} />
         <p>
           당연해 보일 수 있겠지만 이 말은 이야기의 구조에 대한, 2500년이 지난
-          지금까지도 변하지 않는 어떤 원칙을 담고 있어요.
-        </p>
-        <p>
-          그 원칙은, 좋은 이야기, 완전한 이야기란 어떤 욕망을 가진 주인공이
-          사건을 마주하고<span className="font-bold">(=처음)</span>, 그 사건과
-          대결하면서 성장하고<span className="font-bold">(=중간)</span>, 최종
-          대결 끝에 처음과는 다른 사람이 되어 집으로 돌아온다
+          지금까지도 변하지 않는 어떤 원칙을 담고 있어요. 그 원칙은, 좋은
+          이야기, 완전한 이야기란 어떤 욕망을 가진 주인공이 사건을 마주하고
+          <span className="font-bold">(=처음)</span>, 그 사건과 대결하면서
+          성장하고<span className="font-bold">(=중간)</span>, 최종 대결 끝에
+          처음과는 다른 사람이 되어 집으로 돌아온다
           <span className="font-bold">(=끝)</span>는 원칙이에요.
         </p>
       </div>
       <div className="mt-6 items-cener justify-center">
         <ClickableText onClick={handleExtractStructure}>
-          {isExtractingStructure
-            ? "[ 분석 중... ]"
-            : "[ 이 구조를 우리가 만든 이야기에 적용해 볼까요? ]"}
+          {isExtractingStructure ? (
+            <span className="flex items-center gap-2">
+              [ 분석 중...
+              <Image
+                src="/로딩_전구.gif"
+                alt="로딩 전구"
+                width={25}
+                height={25}
+              />
+              ]
+            </span>
+          ) : (
+            "[ 이 구조를 우리가 만든 이야기에 적용해 볼까요? ]"
+          )}
         </ClickableText>
       </div>
     </div>
   );
 
   const page9 = (
-    <div className="flex items-center flex-col w-full px-4 h-screen overflow-y-auto py-8 pb-24">
+    <div className="flex items-center flex-col w-full h-screen overflow-y-auto py-8 pb-24">
       {extractedStructure ? (
         <div className="w-full max-w-4xl">
           <p className="text-center mb-8">

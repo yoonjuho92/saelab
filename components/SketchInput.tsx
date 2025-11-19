@@ -133,7 +133,7 @@ export default function SketchInput({
     return (
       <div
         ref={hostRef}
-        className={`relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm ${className}`}
+        className="relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm"
       >
         <svg
           ref={svgRef}
@@ -148,7 +148,7 @@ export default function SketchInput({
           placeholder={placeholder}
           rows={rows}
           required={required}
-          className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none overflow-hidden"
+          className={`relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none overflow-hidden ${className}`}
           style={{
             fontFamily: "inherit",
             height: "auto",
@@ -167,7 +167,7 @@ export default function SketchInput({
   return (
     <div
       ref={hostRef}
-      className={`relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm ${className}`}
+      className="relative rounded-2xl px-4 py-2 bg-white/80 shadow-sm"
     >
       <svg
         ref={svgRef}
@@ -181,7 +181,7 @@ export default function SketchInput({
         placeholder={placeholder}
         type={type}
         required={required}
-        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl"
+        className={`relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl ${className}`}
         style={{ fontFamily: "inherit" }}
       />
     </div>
