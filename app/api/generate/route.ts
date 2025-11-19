@@ -9,7 +9,9 @@ type PromptName =
   | "extract_plot_point"
   | "extract_structure"
   | "create_from_logline"
-  | "revise_story_structure";
+  | "revise_story_structure"
+  | "extract_character"
+  | "revise_story_with_character";
 
 export async function POST(request: NextRequest) {
   try {

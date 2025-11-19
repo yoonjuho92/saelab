@@ -2,23 +2,31 @@
 
 ## Big Picture
 
-- Interactive storytelling app (Korean UI) using Next.js 16 App Router + React 19 + Tailwind 4. Sketch/hand-drawn look via RoughJS. Guide character: “룩말”.
+- Interactive storytelling app (Korean UI) using Next.js 16 App Router + React 19 + Tailwind 4. Sketch/hand-drawn look via RoughJS. Guide character: "룩말".
 - Client-heavy: most components/pages use hooks — add "use client" for interactivity.
+- Multi-day curriculum: Day 1 (localStorage-based) is onboarding; Day 2+ require auth and use Supabase for persistence.
 
 ## Architecture & Flow
 
-- Routes: `app/page.tsx` (2-step home with internal state), `app/day1/*` (guided flow with context + persistence), `app/login/page.tsx` (placeholder).
-- Global shell: `app/layout.tsx` loads local font via `next/font/local` and sets background image. Page transitions wrap with `app/template.tsx` (`animate-fadeIn` from `app/globals.css`).
-- Day 1 flow state: `app/day1/context.tsx` provides `Day1Provider` storing `logline`, generated `stories`, and `plotPoints` in `localStorage` with keys `day1_*`. Context hydrates on mount and persists changes automatically.
-- Data flow: Client calls `POST /api/generate` → `app/api/generate/route.ts` formats prompts from `lib/prompts.yaml` (via `lib/promptLoader.ts`) → calls OpenAI Chat Completions and returns text or parsed JSON.
+- Routes: `app/page.tsx` (2-step home), `app/dashboard/*` (auth-protected hub), `app/day1/*` (localStorage), `app/day2+/*` (Supabase), `app/login/page.tsx` (Supabase Auth).
+- Global shell: `app/layout.tsx` loads local font via `next/font/local` (NanumGimYuICe) and sets background image. Route transitions use `app/template.tsx` (`animate-fadeIn` from `app/globals.css`).
+- Day 1 flow: `app/day1/context.tsx` provides `Day1Provider` storing `logline`, generated `stories` (3 frameworks), and `plotPoints` in `localStorage` with keys `day1_*`. Context hydrates on mount and persists changes automatically.
+- Day 2+ flow: `app/day2/context.tsx` provides `Day2Provider` storing `logline`, `story`, `storyId` in Supabase `story` table. Context loads from DB on mount (`isLoaded` flag prevents hydration mismatch). Methods: `loadStoryFromDB()`, `saveStoryToDB()`.
+- Data flow: Client calls `POST /api/generate` → `app/api/generate/route.ts` formats prompts from `lib/prompts.yaml` (via `lib/promptLoader.ts`) → calls OpenAI Chat Completions (model: `gpt-4.1`) and returns text or parsed JSON.
+
+## Authentication & Data Persistence
+
+- Supabase Auth: `lib/supabase/client.ts` (client-side) and `lib/supabase/server.ts` (server-side) use `@supabase/ssr` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- Middleware: `middleware.ts` protects routes (`/dashboard`, `/day2`, `/day3`, `/day4`, `/day5`) — redirects to `/login?redirect={path}` if not authenticated.
+- Login flow: `app/login/page.tsx` uses `supabase.auth.signInWithPassword()` and redirects to `?redirect` param (defaults to `/dashboard`).
+- Day 1: localStorage-only (no auth required). Day 2+: requires auth, persists to Supabase `story` table with columns `id`, `user_id`, `logline`, `structure` (JSONB), `created_at`.
 
 ## Context Pattern & State Management
 
-- Day 1 wraps content in `Day1Provider` via `app/day1/layout.tsx` — ensures context available to all child routes.
-- Context uses `isLoaded` flag to prevent hydration mismatch: renders `null` until `localStorage` is read on client.
-- All state setters (e.g., `setLogline`) automatically persist to `localStorage`; no manual save calls needed.
-- TypeScript types: `StoryStructure` defines JSON shape from API; `Stories` holds all three frameworks (`gulino`, `vogel`, `snider`); `ExtractedStructure` for plot structure (`처음`, `중간`, `끝`).
-- Context hook: `useDay1Context()` throws if used outside provider — always wrap routes in `Day1Provider` first.
+- **Day 1 (localStorage)**: `Day1Provider` wraps routes in `app/day1/layout.tsx`. Context hook: `useDay1Context()` throws if used outside provider. State automatically persists to `localStorage` on every setter call (e.g., `setLogline` → `localStorage.setItem("day1_logline", value)`).
+- **Day 2+ (Supabase)**: `Day2Provider` wraps routes in `app/day2/layout.tsx`. Context loads from DB on mount, exposes `saveStoryToDB(storyToSave?)` for explicit saves. Update existing story if `storyId` exists, otherwise insert new row and update `storyId`.
+- `isLoaded` flag: both contexts render `null` until data is loaded (prevents hydration mismatch). Always check `isLoaded` before rendering.
+- TypeScript types: `StoryStructure` defines JSON shape from API (`{ metadata, 막: Record<string, Array<{ 이름, 내용 }>> }`); `Stories` holds all three frameworks (`gulino`, `vogel`, `snider`); `ExtractedStructure` for plot structure (`처음`, `중간`, `끝`).
 
 ## UI Components (RoughJS)
 
@@ -37,8 +45,8 @@
 
 ## AI/Prompt Integration
 
-- Prompts: YAML at `lib/prompts.yaml` with templates for `create_logline`, `create_from_logline_w_{gulino|vogel|snider}`, `extract_plot_point`, and `extract_structure`. `formatPrompt()` in `lib/promptLoader.ts` substitutes `{variables}` placeholders.
-- API: `app/api/generate/route.ts` uses `OPENAI_API_KEY` env var and model `gpt-4.1-mini`. Set `responseFormat: "json"` to enforce JSON mode and parse `message.content`.
+- Prompts: YAML at `lib/prompts.yaml` with templates for `create_logline`, `create_from_logline_w_{gulino|vogel|snider}`, `extract_plot_point`, `extract_structure`, `create_from_logline`, `revise_story_structure`, `extract_character`, and `revise_story_with_character`. `formatPrompt()` in `lib/promptLoader.ts` substitutes `{variables}` placeholders.
+- API: `app/api/generate/route.ts` uses `OPENAI_API_KEY` env var and model `gpt-4.1` (temp: 1, max_tokens: 4000). Set `responseFormat: "json"` to enforce JSON mode and parse `message.content`.
 - Client usage: `app/day1/page.tsx` calls `POST /api/generate` in parallel (`Promise.all`) to produce three frameworks, each returning `{ metadata, 막: { '1막'|'2막'|'3막': [{이름,내용}] } }` JSON.
 - Error handling: JSON parse failures return 500 with clear message; text mode returns `{ result: content }` directly.
 - Always await response, check `response.ok`, and handle errors with user-facing alerts (e.g., `alert()` for quick feedback).
@@ -55,8 +63,8 @@
 ## Developer Workflow
 
 - Commands: `npm run dev` (port 3000), `npm run build`, `npm start`, `npm run lint`.
-- Env: set `OPENAI_API_KEY` in `.env.local` for `/api/generate` to work locally/deployed.
-- Files to study first: `app/page.tsx`, `app/day1/page.tsx`, `app/day1/context.tsx`, `components/*`, `app/api/generate/route.ts`, `lib/{promptLoader.ts,prompts.yaml}`.
+- Env: set `OPENAI_API_KEY` in `.env.local` for `/api/generate` to work locally/deployed. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for Supabase integration.
+- Files to study first: `app/page.tsx`, `app/day1/page.tsx`, `app/day1/context.tsx`, `app/day2/context.tsx`, `components/*`, `app/api/generate/route.ts`, `lib/{promptLoader.ts,prompts.yaml}`, `middleware.ts`.
 - TypeScript: strict mode enabled; always type props interfaces. React 19 JSX transform (`"jsx": "react-jsx"`).
 
 ## Do/Don’t (Project‑specific)

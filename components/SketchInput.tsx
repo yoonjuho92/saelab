@@ -139,8 +139,31 @@ export default function SketchInput({
         rows={multiline ? rows : undefined}
         type={multiline ? undefined : type}
         required={required}
-        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none"
-        style={{ fontFamily: "inherit" }}
+        className="relative z-10 w-full bg-transparent border-none outline-none text-neutral-800 placeholder:text-neutral-400 placeholder:lg:text-2xl resize-none overflow-hidden"
+        style={{
+          fontFamily: "inherit",
+          height: multiline ? "auto" : undefined,
+          minHeight: multiline ? `${rows * 1.5}em` : undefined,
+        }}
+        onInput={
+          multiline
+            ? (e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = "auto";
+                target.style.height = target.scrollHeight + "px";
+              }
+            : undefined
+        }
+        ref={
+          multiline
+            ? (el: HTMLTextAreaElement | null) => {
+                if (el) {
+                  el.style.height = "auto";
+                  el.style.height = el.scrollHeight + "px";
+                }
+              }
+            : undefined
+        }
       />
     </div>
   );
