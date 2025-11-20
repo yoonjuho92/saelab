@@ -498,7 +498,7 @@ export default function Day() {
   );
 
   const page9 = (
-    <div className="flex items-center flex-col w-full h-screen overflow-y-auto py-8 pb-24">
+    <div className="flex items-center flex-col w-full py-8 pb-24">
       {extractedStructure ? (
         <div className="w-full max-w-4xl">
           <p className="text-center mb-8">
@@ -588,7 +588,7 @@ export default function Day() {
   ];
 
   return (
-    <div className="flex-col flex items-center h-screen justify-center px-4">
+    <div className="flex-col flex items-center h-screen overflow-y-auto px-4 py-8">
       <div
         className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
