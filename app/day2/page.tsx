@@ -79,6 +79,8 @@ export default function Day2Page() {
     끝: string;
   } | null>(null);
   const [isExtractingStructure, setIsExtractingStructure] = useState(false);
+  const [initialLogline, setInitialLogline] = useState("");
+  const [isSavingLogline, setIsSavingLogline] = useState(false);
 
   // story가 변경되면 editableStory 동기화
   useEffect(() => {
@@ -86,6 +88,14 @@ export default function Day2Page() {
       setEditableStory(JSON.parse(JSON.stringify(story)));
     }
   }, [story, currentPage]);
+
+  // page3 진입 시 초기 로그라인 저장 (한 번만)
+  useEffect(() => {
+    if (currentPage === 3) {
+      setInitialLogline(logline);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   const handlePageChange = (newPage: number) => {
     setIsTransitioning(true);
@@ -162,6 +172,24 @@ export default function Day2Page() {
       alert("저장 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const hasLoglineChanges = () => {
+    return logline !== initialLogline && logline.trim() !== "";
+  };
+
+  const saveLoglineOnly = async () => {
+    setIsSavingLogline(true);
+    try {
+      await saveStoryToDB(story);
+      setInitialLogline(logline);
+      alert("로그라인이 저장되었습니다!");
+    } catch (error) {
+      console.error("Error saving logline:", error);
+      alert("저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSavingLogline(false);
     }
   };
 
@@ -283,10 +311,24 @@ export default function Day2Page() {
         height={100}
         className="transform scale-x-[-1]"
       />
-      <p>
+      <p className="pb-5">
         지난 시간에 연습해 본 대로, 내가 만들고 싶은 이야기의 씨앗, 로그라인을
         입력해 주세요:
       </p>
+      <div className="flex justify-end">
+        <SketchButton
+          className="text-lg"
+          onClick={saveLoglineOnly}
+          disabled={!hasLoglineChanges() || isSavingLogline}
+          loading={isSavingLogline}
+        >
+          {isSavingLogline
+            ? "저장 중..."
+            : hasLoglineChanges()
+            ? "로그라인 저장하기"
+            : "바뀐 내용이 없습니다"}
+        </SketchButton>
+      </div>
 
       <div className="mt-6">
         <SketchInput
@@ -296,7 +338,7 @@ export default function Day2Page() {
         />
       </div>
 
-      <div className="flex mt-6 justify-center">
+      <div className="flex mt-6 justify-center gap-4">
         <SketchButton
           onClick={generateStories}
           disabled={isGeneratingStories || !logline.trim()}

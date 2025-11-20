@@ -11,7 +11,8 @@ type PromptName =
   | "create_from_logline"
   | "revise_story_structure"
   | "extract_character"
-  | "revise_story_with_character";
+  | "revise_story_with_character"
+  | "create_first_act_treatment";
 
 export async function POST(request: NextRequest) {
   try {

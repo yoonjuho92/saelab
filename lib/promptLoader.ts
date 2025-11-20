@@ -21,6 +21,7 @@ interface Prompts {
   revise_story_structure: PromptTemplate;
   extract_character: PromptTemplate;
   revise_story_with_character: PromptTemplate;
+  create_first_act_treatment: PromptTemplate;
 }
 
 let prompts: Prompts | null = null;
