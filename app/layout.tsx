@@ -23,9 +23,8 @@ export default function RootLayout({
       <body
         className={
           yui.className +
-          " h-dvh overflow-auto break-keep leading-relaxed text-2xl lg:text-4xl px-8 lg:px-24 antialiased bg-[url('/bg.png')] bg-cover"
+          " h-screen overflow-auto break-keep leading-relaxed text-2xl lg:text-4xl px-8 lg:px-24 antialiased bg-[url('/bg.png')] bg-cover"
         }
-        style={{ height: "100dvh" }}
       >
         {children}
       </body>
