@@ -19,12 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
         className={
           yui.className +
-          " min-h-screen max-h-screen flex justify-center items-center overflow-auto break-keep leading-relaxed text-2xl lg:text-4xl px-8 lg:px-24 antialiased bg-[url('/bg.png')] bg-cover"
+          " h-dvh overflow-auto break-keep leading-relaxed text-2xl lg:text-4xl px-8 lg:px-24 antialiased bg-[url('/bg.png')] bg-cover"
         }
+        style={{ height: "100dvh" }}
       >
         {children}
       </body>
