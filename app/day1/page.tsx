@@ -340,7 +340,7 @@ export default function Day() {
   );
 
   const page5 = (
-    <div className="w-full justify-center h-screen flex flex-col py-4">
+    <div className="w-full max-w-full justify-center h-screen flex flex-col py-4 overflow-x-hidden">
       <div className="text-center text-base lg:text-4xl mb-4 flexitems-center justify-center gap-1">
         입력한 이야기의 씨앗으로 AI가 만든 세 가지{" "}
         <span className="font-bold">구조</span>의 이야기를 살펴볼까요?
@@ -358,8 +358,8 @@ export default function Day() {
         <p className="text-lg lg:text-base font-medium text-neutral-500 uppercase tracking-wider mb-1">
           로그라인
         </p>
-        <div className="overflow-x-auto">
-          <p className="text-lg lg:text-2xl leading-relaxed text-center whitespace-nowrap">
+        <div>
+          <p className="text-lg lg:text-2xl leading-relaxed text-center wrap-break-word">
             {logline}
           </p>
         </div>
@@ -406,7 +406,7 @@ export default function Day() {
       </div>
 
       {/* Selected Framework Content with Fixed Height */}
-      <div className="overflow-x-auto pb-16">
+      <div className="pb-16 overflow-y-auto">
         {selectedFramework === "gulino" && stories.gulino && (
           <StoryCard story={stories.gulino} />
         )}
