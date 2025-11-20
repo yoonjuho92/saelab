@@ -498,7 +498,7 @@ export default function Day() {
   );
 
   const page9 = (
-    <div className="flex items-center flex-col w-full py-8 pb-24">
+    <div className="flex h-screen flex-col w-full py-8">
       {extractedStructure ? (
         <div className="w-full max-w-4xl">
           <p className="text-center mb-8">
@@ -539,7 +539,7 @@ export default function Day() {
             <p>이렇게 모든 이야기는 시작, 중간, 끝의 구조를 가지고 있습니다!</p>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex pb-8 justify-center">
             <ClickableText onClick={() => handlePageChange(10)}>
               [ 다음 ]
             </ClickableText>
@@ -588,7 +588,7 @@ export default function Day() {
   ];
 
   return (
-    <div className="flex-col flex items-center h-screen overflow-y-auto px-4 py-8">
+    <div className="flex-col justify-center flex items-center h-screen px-4 py-8">
       <div
         className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"

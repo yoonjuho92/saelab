@@ -9,7 +9,9 @@ export default function Day1Layout({
 }) {
   return (
     <Day1Provider>
-      <div className="h-screen w-full overflow-y-auto">{children}</div>
+      <div className="justify-center w-full flex overflow-y-auto">
+        {children}
+      </div>
     </Day1Provider>
   );
 }

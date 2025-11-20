@@ -43,7 +43,7 @@ export default function Home() {
   const page2 = (
     <div className="w-full flex flex-col items-center">
       <p>당신은...</p>
-      <div className="flex w-full max-w-4xl flex-col gap-4 mt-4">
+      <div className="flex w-full min-w-64 max-w-4xl flex-col gap-4 mt-4">
         <SketchCard
           className="py-2 w-full text-center"
           onClick={() => router.push("/day1")}
@@ -61,7 +61,7 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen flex-col flex items-center justify-center relative">
+    <div className="min-h-screen w-full flex-col flex items-center justify-center relative">
       <div
         className={`transition-opacity w-full duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
